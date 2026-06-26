@@ -28,7 +28,7 @@ Excel · Power Pivot · Power Query · PivotTables · PivotCharts · Slicers · 
 
 ## Screenshots
 
-![Dashboard overview](screenshots/dashboard-overview.png)
+![Dashboard overview](dashboard-overview.png)
 
 ## Note on data
 
