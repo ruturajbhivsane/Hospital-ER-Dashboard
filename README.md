@@ -22,13 +22,67 @@ This dashboard answers a simple question for hospital ER stakeholders: *how is t
 - **Calendar table:** built with DAX calculated columns, loaded into the Power Pivot Data Model
 - Relationships managed in Power Pivot to support slicer-driven filtering across all visuals
 
+![Data model diagram](screenshots/data-model-diagram.png)
+
+## DAX
+
+### Calculated columns
+
+Added directly to the fact table to support the age-group and wait-time-delay visuals.
+
+**Age Group** — buckets patients into age ranges for the demographics chart:
+```dax
+Age Group =
+IF([Patient Age]<=12,"Child (0-12)",
+  IF([Patient Age]<=18,"Teen (13-18)",
+    IF([Patient Age]<=35,"Adult (19-35)",
+      IF([Patient Age]<=60,"Middle Age (36-60)","Senior (61+)"))))
+```
+
+**Patient Attend Status** — flags any visit with a wait time over 30 minutes as delayed:
+```dax
+Patient Attend Status =
+IF('Hospital Emergency Room Data'[Patient Waittime]>30,"Delay","Ontime")
+```
+
+### KPI measures
+
+Power Pivot measures behind the dashboard's KPI cards.
+
+**Admitted Patients** — count of visits where the patient was admitted:
+```dax
+Admitted Patients =
+CALCULATE(
+    COUNTROWS('Hospital Emergency Room Data'),
+    'Hospital Emergency Room Data'[Patient Admission Flag]="Admitted"
+)
+```
+
+**Admission Rate** — admitted patients as a share of total visits:
+```dax
+Admission Rate =
+DIVIDE([Admitted Patients], COUNTROWS('Hospital Emergency Room Data'))
+```
+
+**Estimated Cost** — sums each visit's department base cost, with a 1.6x multiplier applied to admitted visits to reflect the higher cost of inpatient care:
+```dax
+Estimated Cost =
+SUMX(
+    'Hospital Emergency Room Data',
+    RELATED(Department_Lookup_csv_final[Base Cost (USD)])
+        * IF('Hospital Emergency Room Data'[Patient Admission Flag]="Admitted", 1.6, 1)
+)
+```
+
+*Average Wait Time and Average Satisfaction Score use Excel's default implicit measures (AVERAGE) rather than custom DAX.*
+
 ## Tools used
 
 Excel · Power Pivot · Power Query · PivotTables · PivotCharts · Slicers · DAX
 
 ## Screenshots
 
-![Dashboard overview](dashboard-overview.png)
+![Dashboard overview](screenshots/dashboard-overview.png)
 
 ## Note on data
 
