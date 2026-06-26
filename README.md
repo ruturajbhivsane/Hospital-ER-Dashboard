@@ -83,6 +83,8 @@ Excel · Power Pivot · Power Query · PivotTables · PivotCharts · Slicers · 
 ## Screenshots
 
 ![Dashboard overview](dashboard-overview.png) 
+<img width="1920" height="835" alt="image" src="https://github.com/user-attachments/assets/7fb5d30f-c10a-4ff5-80ab-de5958cf1ea5" />
+
 
 
 ## Note on data
